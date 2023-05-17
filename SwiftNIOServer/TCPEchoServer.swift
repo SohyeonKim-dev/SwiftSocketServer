@@ -60,7 +60,6 @@ class EchoServer {
                 }
                  */
                 
-                // 맞는지 검증 X
                 channel.pipeline.addHandler(EchoHandler())
                 
             }
