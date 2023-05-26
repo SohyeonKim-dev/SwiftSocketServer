@@ -12,6 +12,7 @@
 		552360CC2A13D92000690A79 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 552360CA2A13D92000690A79 /* LaunchScreen.storyboard */; };
 		552360D42A13DA9000690A79 /* TCPEchoServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552360D32A13DA9000690A79 /* TCPEchoServerHandler.swift */; };
 		555C2A242A14A14B00E531D4 /* TCPEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555C2A232A14A14B00E531D4 /* TCPEchoServer.swift */; };
+		559F1D712A20F18400656D03 /* TCPEchoChattingServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559F1D702A20F18400656D03 /* TCPEchoChattingServer.swift */; };
 		55F0D4992A1521F1000B8A32 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F0D4982A1521F1000B8A32 /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -22,6 +23,7 @@
 		552360CD2A13D92000690A79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		552360D32A13DA9000690A79 /* TCPEchoServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPEchoServerHandler.swift; sourceTree = "<group>"; };
 		555C2A232A14A14B00E531D4 /* TCPEchoServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPEchoServer.swift; sourceTree = "<group>"; };
+		559F1D702A20F18400656D03 /* TCPEchoChattingServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPEchoChattingServer.swift; sourceTree = "<group>"; };
 		55F0D4982A1521F1000B8A32 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9C9DC80F27EBC8589C7D379A /* Pods_SwiftNIOServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftNIOServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDF03E933B30ADA8A8E02E2A /* Pods-SwiftNIOServer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftNIOServer.debug.xcconfig"; path = "Target Support Files/Pods-SwiftNIOServer/Pods-SwiftNIOServer.debug.xcconfig"; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 			children = (
 				552360D32A13DA9000690A79 /* TCPEchoServerHandler.swift */,
 				555C2A232A14A14B00E531D4 /* TCPEchoServer.swift */,
+				559F1D702A20F18400656D03 /* TCPEchoChattingServer.swift */,
 				55F0D4982A1521F1000B8A32 /* main.swift */,
 				552360C82A13D92000690A79 /* Assets.xcassets */,
 				552360CA2A13D92000690A79 /* LaunchScreen.storyboard */,
@@ -203,6 +206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55F0D4992A1521F1000B8A32 /* main.swift in Sources */,
+				559F1D712A20F18400656D03 /* TCPEchoChattingServer.swift in Sources */,
 				555C2A242A14A14B00E531D4 /* TCPEchoServer.swift in Sources */,
 				552360D42A13DA9000690A79 /* TCPEchoServerHandler.swift in Sources */,
 			);
