@@ -107,9 +107,6 @@ class EchoChattingServer {
             .serverChannelInitializer { channel in
                 channel.pipeline.addHandler(EchoChattingServerHandler())
             }
-//            .childChannelInitializer { channel in
-//                return channel.pipeline.addHandler(EchoChattingServerHandler())
-//            }
             .childChannelOption(ChannelOptions.socket(IPPROTO_TCP, TCP_NODELAY), value: 1)
             .childChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
             .childChannelOption(ChannelOptions.maxMessagesPerRead, value: 16)
