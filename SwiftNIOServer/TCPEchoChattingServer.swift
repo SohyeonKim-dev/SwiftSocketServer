@@ -6,9 +6,12 @@
 //
 
 import Foundation
-import NIO
 
-var group_queue:[Int] = []
+import NIO
+import SocketIO
+
+// global DB
+var group_queue:[Int] = [1, 2, 3]
 
 class EchoChattingServerHandler: ChannelInboundHandler {
     typealias InboundIn = ByteBuffer
@@ -20,7 +23,6 @@ class EchoChattingServerHandler: ChannelInboundHandler {
         if let received = buffer.readString(length: readableBytes) {
             print(received)
         }
-        
         channelContext.write(data, promise: nil)
     }
     
@@ -35,7 +37,7 @@ class EchoChattingServerHandler: ChannelInboundHandler {
 }
 
 class EchoChattingServer {
-    private let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
+    private let group = MultiThreadedEventLoopGroup(numberOfThreads: group_queue.count)
     private var host: String?
     var port: Int?
     
@@ -63,6 +65,7 @@ class EchoChattingServer {
     func stop() {
         do {
             try group.syncShutdownGracefully()
+            print("echo-server is de-activated")
         } catch let error {
             print("Error shutting down \(error.localizedDescription)")
             exit(0)
@@ -74,9 +77,15 @@ class EchoChattingServer {
         return ServerBootstrap(group: group)
             .serverChannelOption(ChannelOptions.backlog, value: 256)
             .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
-            .childChannelInitializer { channel in
+            .serverChannelInitializer{ channel in
                 // Handler 변경 주의
                 channel.pipeline.addHandler(EchoChattingServerHandler())
+            }
+            .childChannelInitializer { channel in
+                // Handler 변경 주의
+                let socket = try SocketIOClient(config: [], socketURL: URL(string: "server address")!, sessionDelegate: nil)
+                let handler = SocketIOClientHandler(socket: socket)
+                return channel.pipeline.addHandler(handler)
             }
             .childChannelOption(ChannelOptions.socket(IPPROTO_TCP, TCP_NODELAY), value: 1)
             .childChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
