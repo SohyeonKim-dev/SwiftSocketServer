@@ -11,19 +11,46 @@ import NIO
 import SocketIO
 
 // global DB
-var group_queue:[Int] = [1, 2, 3]
+var connectedClients: [ObjectIdentifier: Channel] = [:]
 
 class EchoChattingServerHandler: ChannelInboundHandler {
     typealias InboundIn = ByteBuffer
     typealias OutboundOut = ByteBuffer
     
+    func channelActive(context: ChannelHandlerContext) {
+        let clientChannel = context.channel
+        let clientId = ObjectIdentifier(clientChannel)
+        connectedClients[clientId] = clientChannel
+    }
+    
     func channelRead(channelContext: ChannelHandlerContext, data: NIOAny) {
         var buffer = unwrapInboundIn(data)
         let readableBytes = buffer.readableBytes
+        
         if let received = buffer.readString(length: readableBytes) {
-            print(received)
+            // client에게 받은 메세지를 connectedClients에게 broadcast
+            let receivedMessage = "received \(received) and echoed to \(connectedClients.count) clients"
+            print(receivedMessage)
+            broadcastMessage(receivedMessage)
         }
-        channelContext.write(data, promise: nil)
+    }
+    
+    func channelInactive(context: ChannelHandlerContext) {
+        let clientChannel = context.channel
+        let clientId = ObjectIdentifier(clientChannel)
+        connectedClients.removeValue(forKey: clientId)
+
+        let message = "active threads are remained: \(connectedClients.count) threads"
+        print(message)
+        broadcastMessage(message)
+    }
+    
+    func broadcastMessage(_ message: String) {
+        let messageBuffer = ByteBuffer(string: message)
+
+        for (_, clientChannel) in connectedClients {
+            _ = clientChannel.writeAndFlush(messageBuffer)
+        }
     }
     
     func channelReadComplete(channelContext: ChannelHandlerContext) {
@@ -37,7 +64,7 @@ class EchoChattingServerHandler: ChannelInboundHandler {
 }
 
 class EchoChattingServer {
-    private let group = MultiThreadedEventLoopGroup(numberOfThreads: group_queue.count)
+    private let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
     private var host: String?
     var port: Int?
     
@@ -65,7 +92,7 @@ class EchoChattingServer {
     func stop() {
         do {
             try group.syncShutdownGracefully()
-            print("echo-server is de-activated")
+            print("chatting-server is de-activated")
         } catch let error {
             print("Error shutting down \(error.localizedDescription)")
             exit(0)
@@ -77,16 +104,12 @@ class EchoChattingServer {
         return ServerBootstrap(group: group)
             .serverChannelOption(ChannelOptions.backlog, value: 256)
             .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
-            .serverChannelInitializer{ channel in
-                // Handler 변경 주의
+            .serverChannelInitializer { channel in
                 channel.pipeline.addHandler(EchoChattingServerHandler())
             }
-            .childChannelInitializer { channel in
-                // Handler 변경 주의
-                let socket = try SocketIOClient(config: [], socketURL: URL(string: "server address")!, sessionDelegate: nil)
-                let handler = SocketIOClientHandler(socket: socket)
-                return channel.pipeline.addHandler(handler)
-            }
+//            .childChannelInitializer { channel in
+//                return channel.pipeline.addHandler(EchoChattingServerHandler())
+//            }
             .childChannelOption(ChannelOptions.socket(IPPROTO_TCP, TCP_NODELAY), value: 1)
             .childChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
             .childChannelOption(ChannelOptions.maxMessagesPerRead, value: 16)
