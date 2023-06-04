@@ -8,7 +8,7 @@
 import Foundation
 import NIO
 
-class UDPServer {
+class UDPEchoServer {
     let group: EventLoopGroup
     
     init() throws {
@@ -27,8 +27,9 @@ class UDPServer {
     }
     
     func start() throws {
+        // TODO: Channel 구문 수정 필요
         let channel: Channel = bootstrapChannel() as! Channel
-        channel.pipeline.addHandler(ServerHandler(), name: "serverHandler")
+        // channel.pipeline.addHandler(UDPEchoServerHandler(), name: "serverHandler")
         
         print("> echo-server is activated")
         try channel.closeFuture.wait()
@@ -37,7 +38,7 @@ class UDPServer {
     }
 }
 
-class ServerHandler: ChannelInboundHandler {
+class UDPEchoServerHandler: ChannelInboundHandler {
     typealias InboundIn = AddressedEnvelope<ByteBuffer>
     
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
