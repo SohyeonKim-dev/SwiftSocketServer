@@ -6,15 +6,16 @@
 //  
 
 let hostNumber: String = "hostNumber here"
+let portNumber: Int = 65456
 
-let echoServer = EchoServer(host: hostNumber, port: 65456)
-let chattingServer = EchoChattingServer(host: hostNumber, port: 65456)
+let echoServer = EchoServer(host: hostNumber, port: portNumber)
+let chattingServer = EchoChattingServer(host: hostNumber, port: portNumber)
 
 do {
     print("echo-server is activated")
-    try chattingServer.start()
+    try echoServer.start()
 } catch let error {
     print("Error: \(error.localizedDescription)")
-    chattingServer.stop()
+    echoServer.stop()
     print("echo-server is de-activated")
 }
